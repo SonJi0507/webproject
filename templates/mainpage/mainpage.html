@@ -1,0 +1,51 @@
+{% include 'mainpage/load-box.html' %}
+</head>
+
+<body>
+    <!-- HEADER-BOX START -->
+    {% include 'mainpage/header-box.html' %}
+    <!-- HEADER-BOX END -->
+
+    {% block content %}
+
+    <!-- MIDDLE-BOX -->
+
+    {% endblock content %}
+
+     <!-- FOOTER-BOX START -->
+    {% include 'mainpage/footer-box.html' %} 
+     <!-- FOOTER-BOX END -->
+</body>
+    <!-- JS부분 -->
+    {% include 'mainpage/js-script.html' %}
+    {% comment %} <h1 id="session_user_phone" style="font-size:70px; display:none;">{{request.session.user_phone}}</h1> {% endcomment %}
+    <h1 id="session_user_name" style="font-size:70px; display:none;">{{request.session.user_name}}</h1>
+    <h1 id="session_user_phone" style="font-size:70px; display:none;">{{request.session.user_phone}}</h1>
+    <script>
+    // header-box기능 - 로그인, 회원가입, 로그아웃 버튼을 숨기고 보이는 부분
+        var session_user_name = document.getElementById('session_user_name').textContent;
+        var session_user_phone = document.getElementById('session_user_phone').textContent;
+        if (session_user_phone != '') {
+            // alert('환영합니다 '+session_user_name+'님')
+            $("#header-box-login__btn").hide();
+            $("#header-box-register__btn").hide();
+            $("#header-box-logout__btn").show();
+        }
+        else {
+            // alert('로그인 후 사용가능')
+            $("#header-box-login__btn").show();
+            $("#header-box-register__btn").show();
+            $("#header-box-logout__btn").hide();
+        }
+
+        // #admin__btn 인 애들은 session user_phone == '99999999999'이면 보이게하기
+        if (session_user_phone=="99999999999") {
+            if (document.getElementById('admin__btn') != null ){
+                var admin__btn = document.getElementById('admin__btn').textContent;
+                $("#admin__btn").show();
+            }
+        }
+        
+
+    </script>
+</html>

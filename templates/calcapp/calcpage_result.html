@@ -1,0 +1,189 @@
+{% extends 'mainpage/mainpage.html' %}
+
+{% block content %}
+{% include 'calcapp/calcpage_common.html' %}
+<!-- css/js -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<!-- progressbar scss -->
+
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option spad set-bg" data-setbg="/static/img/3.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>마이페이지</h2>
+                    <div class="breadcrumb__links">
+                        <a href="{% url 'mainpage:mainhome' %}">Home</a>
+                        <span style="color:mediumaquamarine;">계산기</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- 계산기, 상세, 수료현황 Start-->
+{% if u_phone != '99999999999' %}
+<section class="pricing spad">
+    <div class="container">
+        <div class="col-lg-12 text-center">
+            <div class="card">
+                <div class="text-center">
+                    {% if image %}
+                    <img class="round" src="/media/{{image}}" style="max-width: fit-content;" height="200">
+                    <br>
+                    {% else %}
+                    <img class="round" src="https://i.stack.imgur.com/34AD2.jpg" width="200"> <br>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if nickname %}
+                    <h3 class="card-title">{{nickname}}</h3>
+                    {% endif %}
+                    <!-- {% if user == profile_user %} 로그인한 사용자와 프로필 소유자가 일치할 때만 프로필 편집이 가능하도록 -->
+                    <a href="#"><button type="button" class="btn btn-default">프로필 편집</button></a></h2>
+                    <!-- {% endif %} -->
+                    <p class="card-text">
+                        description: {% if description %} {{description}} {% endif %}<br>
+                    </p>
+                    <a href="#" class="card-link">프로필 수정</a>
+                </div>
+            </div>
+        </div>
+    </div>
+<br>
+    <div class="container">
+        <div class="col-lg-12 text-center">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">교육 수당 계산기</h3>
+                    <h6 class="card-subtitle mb-2 text-muted">(출석일수 기준)</h6>
+                    <form action="/calcapp/calcpage/" method="post">
+                        {% csrf_token %}
+                        하루 4시간 이상 20일 기준으로 출석일수를 입력하세요.<br><br>
+                        <input type="text" name="num1" placeholder="ex) 19 or 20">
+                        <input type="submit">
+                    </form>
+                    <hr with="90%">
+                    <div class="card-body">
+                        <h3 class="card-title">지급 기준</h3>
+                        <!-- <h6 class="card-subtitle mb-2 text-muted">subtitle</h6> -->
+                        <p class="card-text">
+                            3회차 출석률이 하루 4시간 이상 80% 이상일 경우 교육수당 지급<br>
+                            3회차 교육수당 지급금액은 월 최대 300,000원<br>
+                        </p>
+                        <!-- <a href="#" class="card-link">Card link</a> -->
+                        <!-- <a href="#" class="card-link">Another link</a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<hr>
+{% endif %}
+<!-- 계산기, 상세, 수료현황 End-->
+
+<section class="pricing spad">
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h3>🎓상세현황</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">이름</th>
+                            <th scope="col">출석일수</th>
+                            <th scope="col">결석일수</th>
+                            <th scope="col">출석시간</th>
+                            <th scope="col">월 출석률(시간)</th>
+                            <th scope="col">월 출석률(일)</th>
+                            <th scope="col">누적 출석률(시간)</th>
+                            <th scope="col">누적 출석률(일)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if u_phone == '99999999999' %}
+                        {% for u in attendances %}
+                        <tr>
+                            <th scope="row">
+                                {{u.name}}
+                            </th>
+                            <td>{{u.attend}}</td>
+                            <td>{{u.absent}}</td>
+                            <td>{{u.time}}</td>
+                            <td>{{u.time_rate}}%</td>
+                            <td>{{u.day_rate}}%</td>
+                            <td>{{u.time_cum_rate}}%</td>
+                            <td>{{u.day_cum_rate}}%</td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <th scope="row">
+                                {{name}}
+                            </th>
+                            <td>{{attend}}</td>
+                            <td>{{absent}}</td>
+                            <td>{{time}}</td>
+                            <td>{{time_rate}}%</td>
+                            <td>{{day_rate}}%</td>
+                            <td>{{time_cum_rate}}%</td>
+                            <td>{{day_cum_rate}}%</td>
+                        </tr>
+                        {% endif %}
+                    <tbody>
+                </table>
+
+                <h3>🎓수료현황</h3>
+                <!-- progress -->
+                {% if u_phone == '99999999999' %}
+                {% for u in attendances %}
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{u.time_cum_rate}}%"
+                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <strong>{{name}} DD 님</strong> 현재 <strong>{{time}}</strong> / 944 시간 완료 하셨습니다.
+                {% if time < 800 %} 현재 수료 <strong>'불가'</strong> 합니다.
+                    {% elif time >= 800 %}
+                    현재 수료 <strong>'가능'</strong> 합니다.
+                    {% endif %}
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{time_cum_rate}}%"
+                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+<br><br>
+<!-- 버튼 -->
+<!-- <button 
+        type="button" 
+        class="btn btn-primary" 
+        data-toggle="popover" 
+        data-placement="top" 
+        title="지급 기준" 
+        data-content="
+        📌단위기간*출석률이 80% 이상일 경우에 한하여 교육수당 지급<br>
+        📌교육수당 지급금액은 월 최대 300,000원<br>
+        (단위기간: 교육 시작일을 기준으로 1개월 단위로 나눈 기간)">
+        지급 기준
+</button> -->
+<!-- <script>
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    });
+</script> -->
+
+{% endblock %}

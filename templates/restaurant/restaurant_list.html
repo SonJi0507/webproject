@@ -1,0 +1,71 @@
+{% extends 'mainpage/mainpage.html' %}
+
+{% block content %}
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option spad set-bg" data-setbg="/static/img/3.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2>맛집 게시판</h2>
+                        <div class="breadcrumb__links">
+                            <a href="/restaurant/">추천맛집리스트</a>
+                            <span style="color:mediumaquamarine;">맛집리스트</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- MIDDLE-BOX START -->
+    <section class="breadcrumb-option spad set-bg">
+        <div class="container">
+            <div class="row">
+                <!-- 실제 페이지 내용 쓰기 START-->
+                <!-- 검색창 시작 -->
+                {% include 'restaurant/restaurant_search.html' %} 
+                <!-- 검색창 끝-->
+                <br>
+                <br>
+
+
+                <!-- Blog Section Begin -->
+                <section class="blog spad">
+                    <div class="container">
+                        <div class="row">
+
+                            {% for rest in rest_list %}
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="blog__item">
+                                        <div class="blog__item__pic">
+                                            <a href="/restaurant/{{ rest.id }}">
+                                                <img src="{{ rest.rest_img1 | default:'/static/img/dogie.jpg'}}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="blog__item__text">
+                                            <div class="rating">
+                                                {% for x in rest.rest_starscore %}
+                                                <i class="fa fa-star"></i>
+                                                {% endfor %}
+                                            </div>
+                                            <h5><a href="/restaurant/{{ rest.id }}">{{rest.rest_name}}</a></h5>
+                                            <ul>
+                                                <li>{{rest.rest_kind}}</li>
+                                            </ul>
+                                            <h6>{{rest.rest_address}}</h6>
+                                        </div>
+                                    </div>
+                                </div>        
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+    <!-- Blog Section End -->
+    <!-- 실제 페이지 내용 쓰기 END-->
+            </div>
+        </div>
+    </section>
+{% endblock content %}
