@@ -54,7 +54,7 @@ def restaurant_search(request):
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
 
-        driver =  webdriver.Chrome(executable_path='static/chromedriver', chrome_options=options)
+        driver =  webdriver.Chrome(chrome_options=options) #executable_path='static/chromedriver'
         driver.get(url)
         time.sleep(0.5)
         elem = driver.find_element_by_class_name('Header__LogoIcon')
