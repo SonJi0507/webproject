@@ -52,7 +52,7 @@ def restaurant_search(request):
         url = 'https://www.mangoplate.com/'
 
         options = webdriver.ChromeOptions()
-        options.add_argument('headless')
+        #options.add_argument('headless')
 
         driver =  webdriver.Chrome(chrome_options=options) #executable_path='static/chromedriver'
         driver.get(url)
