@@ -50,17 +50,27 @@ def restaurant_search(request):
         
         ##########################      크롤링     #######################################
         url = 'https://www.mangoplate.com/'
-        webdriver.DesiredCapabilities.CHROME['acceptSslCerts']=True
+        #webdriver.DesiredCapabilities.CHROME['acceptSslCerts']=True
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument("--single-process")
         options.add_argument("--disable-dev-shm-usage")
-        driver =  webdriver.Chrome(chrome_options=options) #executable_path='static/chromedriver'
+        driver =  webdriver.Chrome(executable_path='static/chromedriver.exe', chrome_options=options) #
+        
+        
+        # temp = True
+        # while temp:
+        #     try:
+        #         # Add your proxxy change code here
+        #         driver.get(url)
+        #         temp = False
+        #     except Exception as e:
+        #         print(e)
+        #         driver.quit()
+
         driver.get(url)
-        
-        
-        
+
         time.sleep(0.5)
         elem = driver.find_element_by_class_name('Header__LogoIcon')
         action_chains = ActionChains(driver)
@@ -72,12 +82,6 @@ def restaurant_search(request):
 
         ser_btn=driver.find_element_by_class_name("btn-search")# 검색찾기
         ser_btn.click()
-        #################################################################
-        # html = driver.page_source
-        # soup = BeautifulSoup(html, 'html.parser')
-        # if soup.select('body > main > article > div.column-wrapper > div > div > section > div.search_result_empty_message > div > p') == '검색한 식당이 망고플레이트에 보이지 않을 땐??':
-        #     return HttpResponse('검색어가 존재하지 않습니다.')
-        #################################################################
 
         try :
             elem2 = driver.find_element_by_class_name('thumb')
@@ -87,6 +91,8 @@ def restaurant_search(request):
                                                                 'search':search})
             
             # return HttpResponse('검색어가 존재하지 않습니다.')
+        
+        
         action_chains = ActionChains(driver)
         action_chains.move_to_element_with_offset(elem2, 0, 0).perform()
         action_chains.click().perform()
