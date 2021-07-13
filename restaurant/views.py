@@ -56,7 +56,7 @@ def restaurant_search(request):
         options.add_argument('--no-sandbox')
         options.add_argument("--single-process")
         options.add_argument("--disable-dev-shm-usage")
-        driver =  webdriver.Chrome(chrome_options=options) #executable_path='static/chromedriver.exe', 
+        driver =  webdriver.Chrome(executable_path='static/chromedriver.exe', chrome_options=options) #
         
         
         # temp = True
@@ -172,10 +172,9 @@ def restaurant_search(request):
     else :
         rest = Rest.objects.get(rest_name__contains=search)
 
-    context = { 'rest' : rest,
-                'search':search} 
-    return render(request, 'restaurant/restaurant_detail.html', context)
+    return redirect('/restaurant/'+ str(rest.id))
 
+    
 #게시글 review
 def restaurant_review(request, pk):
     # # if request.method == 'POST':
