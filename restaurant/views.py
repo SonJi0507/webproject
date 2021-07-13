@@ -50,15 +50,17 @@ def restaurant_search(request):
         
         ##########################      크롤링     #######################################
         url = 'https://www.mangoplate.com/'
-
+        webdriver.DesiredCapabilities.CHROME['acceptSslCerts']=True
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument("--single-process")
         options.add_argument("--disable-dev-shm-usage")
-
         driver =  webdriver.Chrome(chrome_options=options) #executable_path='static/chromedriver'
         driver.get(url)
+        
+        
+        
         time.sleep(0.5)
         elem = driver.find_element_by_class_name('Header__LogoIcon')
         action_chains = ActionChains(driver)
