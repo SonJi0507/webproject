@@ -56,7 +56,7 @@ def restaurant_search(request):
         options.add_argument('--no-sandbox')
         options.add_argument("--single-process")
         options.add_argument("--disable-dev-shm-usage")
-        driver =  webdriver.Chrome(executable_path='static/chromedriver.exe', chrome_options=options) #
+        driver =  webdriver.Chrome(chrome_options=options) #executable_path='static/chromedriver.exe', 
         
         
         # temp = True
