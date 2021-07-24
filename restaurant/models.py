@@ -14,7 +14,7 @@ class Rest(models.Model):
     rest_update = models.DateTimeField() #등록 날짜
     rest_tel = models.CharField(max_length=15)
     rest_price = models.CharField(max_length=100)
-    rest_starscore = models.CharField(max_length=10)
+    #rest_starscore = models.CharField(max_length=10)
 
 class Review(models.Model):
     review_score = models.FloatField() #리뷰점수

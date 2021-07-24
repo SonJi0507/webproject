@@ -30,7 +30,8 @@ def restaurant_list(request):
 def restaurant_detail(request, pk):
     rest = Rest.objects.get(pk=pk)
     review = Review.objects.filter(rest_id = rest)
-    context = { 'rest' : rest , 'review' : review }
+    context = { 'rest' : rest , 'review' : review }    
+
     return render(request, 'restaurant/restaurant_detail.html', context)
     # if not Review.objects.filter(rest_id = rest).exists() :
     #     context = { 'rest' : rest }
@@ -134,10 +135,6 @@ def restaurant_search(request):
             except :
                 rest_score = 0
 
-            starscore = 0
-            starscore = int(float(rest_score))
-            starscore = '*' * starscore
-
             td = soup.select('section.restaurant-detail > ul > li:nth-child(1) > div.Restaurant__InfoItemLabel > div.Restaurant__InfoItemLabel--RoadAddressText')
             rest_address = td[0].text #가게 주소 도로명
 
@@ -160,7 +157,6 @@ def restaurant_search(request):
                 rest_kind = rest_kind,
                 rest_score = rest_score,
                 rest_url = rest_url,
-                rest_starscore = starscore
                 #입력 안된 것 : seenum, rmd
             )
             if 'rest_price' in locals():

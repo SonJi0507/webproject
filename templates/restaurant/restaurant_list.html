@@ -1,6 +1,7 @@
 {% extends 'mainpage/mainpage.html' %}
 
 {% block content %}
+{% load int_range %}
 
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-option spad set-bg" data-setbg="/static/img/3.jpg">
@@ -10,7 +11,7 @@
                     <div class="breadcrumb__text">
                         <h2>맛집 게시판</h2>
                         <div class="breadcrumb__links">
-                            <a href="/restaurant/">추천맛집리스트</a>
+                            <a href="/restaurant/">추천맛집</a>
                             <span style="color:mediumaquamarine;">맛집리스트</span>
                         </div>
                     </div>
@@ -47,7 +48,7 @@
                                         </div>
                                         <div class="blog__item__text">
                                             <div class="rating">
-                                                {% for x in rest.rest_starscore %}
+                                                {% for x in rest.rest_score|int_range %}
                                                 <i class="fa fa-star"></i>
                                                 {% endfor %}
                                             </div>

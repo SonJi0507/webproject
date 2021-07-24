@@ -62,6 +62,7 @@ TEMPLATES = [
             'libraries':{
                # make your file entry here.
                'split': 'restaurant.templatetags.split_tag',
+               'int_range': 'restaurant.templatetags.int_range_tag',
             }
         },
     },

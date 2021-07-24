@@ -10,5 +10,4 @@ urlpatterns = [
     path('<int:pk>/', views.restaurant_detail, name='detail'),
     path('restaurant_review/<int:pk>/', views.restaurant_review, name='review'),
     path('restaurant_search/', views.restaurant_search, name='serach')
-    # path('restaurant_search/', views.restaurant_search),
 ]
