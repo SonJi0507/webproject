@@ -4,6 +4,8 @@
 {% block content %}
 {% load split %}
 {% load int_range %}
+{% load enumerate_ %}
+{% load dict_key %}
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="/static/css/restaurant.css">
 
@@ -12,6 +14,9 @@
 <script defer src='/static/js/restaurant.js'></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8deb5ae77ef38486d8a2541c58a9a934&libraries=services"></script>
 
+<scripts>
+
+</script>
 
     <section class="breadcrumb-option spad set-bg" data-setbg="/static/img/submain-bg.png">
         <div class="container">
@@ -149,11 +154,22 @@
                     <div>업데이트날짜 : {{ rest.rest_update }}</div>
                     <br>
                     <br>
+
+
                     <div class="container">
                         <h3>리뷰</h3>
-                        {% for rev in review %}
-                        <p>{{ rev.review_date }}</p>
-                        <p><b>{{ rev.review_writer }}</p>
+
+                        
+
+                        {% for n, rev in review|enumerate_ %}
+                        <p>{{n}}</p>
+                        <p><b>{{writer_nick|dict_key:n}}</p>
+                        <div>
+                        <img class="round" src="/media/{{writer_image|dict_key:n}}" style="max-width: fit-content;" height="30">
+
+
+
+                        <p>{{ rev.review_writer }}</p>
                         <p>{{ rev.review_score }}</p>
                         <p>
                             <div class="rating">
@@ -163,7 +179,10 @@
                             </div>
                         </p>
                         <p>{{ rev.review_content }}</p>
+                        <p>{{ rev.review_date }}</p>
                         <hr>
+                        </div>
+
                         {% empty %}
                         <p>댓글이 없습니다ㅠㅠ 새로운 댓글을 달아주세요^^</p>
                         {% endfor %}
@@ -180,7 +199,6 @@
                             </div>
                         </form>
                     </div>
-
                     </section>
 
                     <!-- 실제 페이지 내용 쓰기 END-->

@@ -3,6 +3,7 @@ from django.http.response import HttpResponse
 from restaurant.models import Rest, Review
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from member.models import Profile, Member
 
 from selenium import  webdriver
 from bs4 import BeautifulSoup
@@ -30,7 +31,15 @@ def restaurant_list(request):
 def restaurant_detail(request, pk):
     rest = Rest.objects.get(pk=pk)
     review = Review.objects.filter(rest_id = rest)
-    context = { 'rest' : rest , 'review' : review }    
+    writer_nick = dict()
+    writer_image = dict()
+    for n, user in enumerate(review) :
+        member = Member.objects.get(user_name = user.review_writer)
+        profile = Profile.objects.get(user_name_id = member.user_phone)
+        writer_nick[n] = profile.nickname
+        writer_image[n] = profile.image
+    
+    context = { 'rest' : rest , 'review' : review , 'writer_nick' : writer_nick, 'writer_image' : writer_image}
 
     return render(request, 'restaurant/restaurant_detail.html', context)
     # if not Review.objects.filter(rest_id = rest).exists() :

@@ -63,6 +63,8 @@ TEMPLATES = [
                # make your file entry here.
                'split': 'restaurant.templatetags.split_tag',
                'int_range': 'restaurant.templatetags.int_range_tag',
+               'enumerate_': 'restaurant.templatetags.enumerate_tag',
+               'dict_key' : 'restaurant.templatetags.dict_key_tag',
             }
         },
     },
