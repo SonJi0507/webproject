@@ -162,14 +162,9 @@
                         
 
                         {% for n, rev in review|enumerate_ %}
-                        <p>{{n}}</p>
-                        <p><b>{{writer_nick|dict_key:n}}</p>
                         <div>
                         <img class="round" src="/media/{{writer_image|dict_key:n}}" style="max-width: fit-content;" height="30">
-
-
-
-                        <p>{{ rev.review_writer }}</p>
+                        <p><b>{{writer_nick|dict_key:n}}</p>
                         <p>{{ rev.review_score }}</p>
                         <p>
                             <div class="rating">
