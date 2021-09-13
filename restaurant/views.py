@@ -11,7 +11,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 
-# Create your views here.
 
 #메인페이지
 def restaurant(request):
@@ -42,23 +41,14 @@ def restaurant_detail(request, pk):
     context = { 'rest' : rest , 'review' : review , 'writer_nick' : writer_nick, 'writer_image' : writer_image}
 
     return render(request, 'restaurant/restaurant_detail.html', context)
-    # if not Review.objects.filter(rest_id = rest).exists() :
-    #     context = { 'rest' : rest }
-    # else :
-    #     review = Review.objects.filter(rest_id = rest )
-    #     context = { 'rest' : rest , 'review' : review }
-
-    #return render(request, 'restaurant/restaurant_detail.html', context)
 
 #검색 상세페이지
 def restaurant_search(request): 
     search = request.POST.get('search')
-    er = ""
-
-    if not Rest.objects.filter(rest_name__contains=search).exists() :  #해당 가게명이 데이터 베이스에 없다.
+    #해당 가게명이 데이터 베이스에 없다.
+    if not Rest.objects.filter(rest_name__contains=search).exists() :  
         
-        
-        ##########################      크롤링     #######################################
+        #크롤링
         url = 'https://www.mangoplate.com/'
         #webdriver.DesiredCapabilities.CHROME['acceptSslCerts']=True
         options = webdriver.ChromeOptions()
@@ -70,20 +60,7 @@ def restaurant_search(request):
         options.add_argument("--disable-dev-shm-usage")
 
         driver =  webdriver.Chrome(chrome_options=options) #executable_path='static/chromedriver.exe', 
-        
-        
-        # temp = True
-        # while temp:
-        #     try:
-        #         # Add your proxxy change code here
-        #         driver.get(url)
-        #         temp = False
-        #     except Exception as e:
-        #         print(e)
-        #         driver.quit()
-
         driver.get(url)
-
         time.sleep(0.5)
         elem = driver.find_element_by_class_name('Header__LogoIcon')
         action_chains = ActionChains(driver)
@@ -96,15 +73,13 @@ def restaurant_search(request):
         ser_btn=driver.find_element_by_class_name("btn-search")# 검색찾기
         ser_btn.click()
 
+        #검색어가 존재하지 않을 시
         try :
             elem2 = driver.find_element_by_class_name('thumb')
         except :
             er = "검색어가 존재하지 않습니다."
             return render(request, 'restaurant/restaurant.html', {'er':er,
                                                                 'search':search})
-            
-            # return HttpResponse('검색어가 존재하지 않습니다.')
-        
         
         action_chains = ActionChains(driver)
         action_chains.move_to_element_with_offset(elem2, 0, 0).perform()
@@ -114,9 +89,9 @@ def restaurant_search(request):
 
         #만약 같은 url 주소를 가진 것이 없다면 데이터를 수집한다.
         if not Rest.objects.filter(rest_url = rest_url).exists() : 
-
             soup = BeautifulSoup(html, 'html.parser')
 
+            # 이미지 크롤링
             img_list = soup.select('.restaurant-photos-item img')
             img_list #이미지 주소
             img_url_list = [] #이미지 주소 리스트
@@ -124,39 +99,36 @@ def restaurant_search(request):
                 rest_photo_url = img.attrs['src']
                 img_url_list.append(rest_photo_url)
 
-            if len(img_url_list) > 0 :
-                rest_img1 = img_url_list[0]
+            if len(img_url_list) > 0 : 
+                rest_img1 = img_url_list[0] #대표이미지 저장
             if len(img_url_list) > 1 :
                 rest_img2 = str()
                 for i in img_url_list[1:] :
-                    rest_img2 += i + '@@'
+                    rest_img2 += i + '@@' #이미지 갯수만큼 저장 후 '@@'를 통해서 분리
                 rest_img2 = rest_img2[:-2]
-
-
-            # for i in range(1,len(img_url_list)+1):
-            #     globals()['rest_img{}'.format(i)] = [x for x in img_url_list]
-
+            # 가게명 크롤링
             name = soup.select('.restaurant_name')
-            rest_name = name[0].text #가게명
+            rest_name = name[0].text
+            #점수 크롤링
             try :
                 score = soup.select('.rate-point')
                 rest_score = score[0].text #점수
             except :
                 rest_score = 0
-
+            # 주소 크롤링
             td = soup.select('section.restaurant-detail > ul > li:nth-child(1) > div.Restaurant__InfoItemLabel > div.Restaurant__InfoItemLabel--RoadAddressText')
-            rest_address = td[0].text #가게 주소 도로명
-
+            rest_address = td[0].text
+            # 가게 전화번호 크롤링
             tel = soup.select('section.restaurant-detail > table > tbody > tr:nth-child(2) > td')
-            rest_tel = tel[0].text #가게 전화번호
-
+            rest_tel = tel[0].text
+            # 가게 음식종류 크롤링
             td = soup.select('body > main > article > div.column-wrapper > div.column-contents > div > section.restaurant-detail > table > tbody > tr:nth-child(3) > td')
             if len(td) > 0:
-                rest_kind = td[0].text #가게음식종류
-
+                rest_kind = td[0].text
+            # 가격대 크롤링
             td = soup.select('body > main > article > div.column-wrapper > div.column-contents > div > section.restaurant-detail > table > tbody > tr:nth-child(4) > td')
             if len(td) > 0:
-                rest_price = td[0].text #가격대
+                rest_price = td[0].text
 
             rest = Rest(
                 rest_update = timezone.now(),
@@ -166,8 +138,8 @@ def restaurant_search(request):
                 rest_kind = rest_kind,
                 rest_score = rest_score,
                 rest_url = rest_url,
-                #입력 안된 것 : seenum, rmd
             )
+            # 존재한다면 저장
             if 'rest_price' in locals():
                 rest_price = rest_price
             if 'rest_img1' in locals() :
@@ -178,18 +150,15 @@ def restaurant_search(request):
         else :
             rest = Rest.objects.get(rest_url = rest_url)
     else :
+        #검색어가 포함된 가게명 불러오기
         rest = Rest.objects.get(rest_name__contains=search)
 
     return redirect('/restaurant/'+ str(rest.id))
-
     
 #게시글 review
 def restaurant_review(request, pk):
-    # # if request.method == 'POST':
+    
     rest = get_object_or_404(Rest, pk = pk)
-
-    # # session_phone = request.session['user_phone']
-    # # user = Member.objects.get(user_phone = session_phone)
     score = request.POST.get('score')
     review_score = float(score)
     review_writer = request.session['user_name']
