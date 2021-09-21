@@ -14,7 +14,6 @@ class Rest(models.Model):
     rest_update = models.DateTimeField() #등록 날짜
     rest_tel = models.CharField(max_length=15)
     rest_price = models.CharField(max_length=100)
-    #rest_starscore = models.CharField(max_length=10)
 
 class Review(models.Model):
     review_score = models.FloatField() #리뷰점수
@@ -29,5 +28,4 @@ class Review(models.Model):
 class Rest_Like(models.Model):
     like_user = models.CharField(max_length=100) #좋아요 누른 전화번호
     like_rest = models.ForeignKey(Rest, on_delete=models.CASCADE) #포린키
-    #게시글 포린키
 

@@ -77,9 +77,12 @@ def restaurant_search(request):
         try :
             elem2 = driver.find_element_by_class_name('thumb')
         except :
-            er = "검색어가 존재하지 않습니다."
-            return render(request, 'restaurant/restaurant.html', {'er':er,
-                                                                'search':search})
+            rest_list_user = Rest.objects.filter(rest_rmd='user').order_by('-id')
+            rest_list_kfq = Rest.objects.filter(rest_rmd='kfq')
+            rest_list_score = Rest.objects.order_by('-rest_score')
+            er = f"{search} 검색어가 존재하지 않습니다."
+            context = {'er':er,'search':search, 'rest_list_user' : rest_list_user, 'rest_list_kfq' : rest_list_kfq , 'rest_list_score' : rest_list_score}
+            return render(request, 'restaurant/restaurant.html',context)
         
         action_chains = ActionChains(driver)
         action_chains.move_to_element_with_offset(elem2, 0, 0).perform()
@@ -109,7 +112,7 @@ def restaurant_search(request):
             # 가게명 크롤링
             name = soup.select('.restaurant_name')
             rest_name = name[0].text
-            #점수 크롤링
+            # 점수 크롤링
             try :
                 score = soup.select('.rate-point')
                 rest_score = score[0].text #점수
